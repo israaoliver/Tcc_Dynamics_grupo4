@@ -31,9 +31,11 @@ namespace TechnoConsole.Models
 
             QueryExpression queryContats = new QueryExpression(this.TableName);
             queryContats.ColumnSet.AddColumns
-                ("firstname",
+                ("contactid",
+                "firstname",
                 "lastname",
                 "fullname",
+                "tc4_cpf",
                 "telephone1",
                 "jobtitle",
                 "parentcustomerid",
@@ -56,46 +58,34 @@ namespace TechnoConsole.Models
         {
             Entity newContatc = new Entity(this.TableName);
 
-            Contas getaccounts = new Contas(connectDynamics2);
-            EntityCollection accounts = getaccounts.GetLista();
 
             foreach (Entity contato in dataTable.Entities)
             {
                 string contatoName = contato["firstname"].ToString();
                 newContatc["firstname"] = contatoName;
 
-                newContatc["lastname"] = contato["lastname"].ToString();
+                newContatc["contactid"] = contato["contactid"];
+
+                string contatoSobrenome = contato.Contains("lastname") ? (contato["lastname"]).ToString() : string.Empty;
+                newContatc["lastname"] = contatoSobrenome;
 
                 string telephoneDoContato = contato.Contains("telephone1") ? (contato["telephone1"]).ToString() : string.Empty;
                 newContatc["telephone1"] = telephoneDoContato;
 
+                string cpf = contato.Contains("tc4_cpf") ? (contato["tc4_cpf"]).ToString() : string.Empty;
+                newContatc["tc4_cpf"] = cpf;
+
                 string cargo = contato.Contains("jobtitle") ? (contato["jobtitle"]).ToString() : string.Empty;
                 newContatc["jobtitle"] = cargo;
 
-                EntityReference parentid = contato.Contains("parentcustomerid") ? (EntityReference)contato["parentcustomerid"] : null;
-                if(parentid != null)
+                EntityReference parentid = null;
+                EntityReference verificada = VerificandoConta(contato);
+                if(verificada != null)
                 {
-                    foreach (Entity account in accounts.Entities)
-                    {
-                        string accounttName = account["name"].ToString();
-                        if (parentid.Name == accounttName)
-                        {
-                            string idDaConta = account["accountid"].ToString();
-                            Guid id = new Guid(idDaConta);
-                            parentid.Id = id;
-                            newContatc["parentcustomerid"] = parentid;
-                            break;
-                        }
-                        else
-                        { newContatc["parentcustomerid"] = null; }
-
-                    }
-                }
-                else
-                {
-                    newContatc["parentcustomerid"] = parentid;
+                    parentid = verificada;
                 }
 
+                newContatc["parentcustomerid"] = parentid;
                
 
                 string email = contato.Contains("emailaddress1") ? (contato["emailaddress1"]).ToString() : string.Empty;
@@ -130,6 +120,54 @@ namespace TechnoConsole.Models
 
                 Service.Create(newContatc);
             }
+
+
+        }
+
+        public EntityReference VerificandoConta(Entity contato)
+        {
+            IOrganizationService d1 = ConnectionDynamics1.GetCrmService();
+            IOrganizationService d2 = ConnectionDynamics2.GetCrmService();
+
+            
+            EntityReference contaId = contato.Contains("parentcustomerid") ? (EntityReference)contato["parentcustomerid"] : null;
+            if (contaId == null)
+            {
+                return contaId;
+            }
+
+            Entity conta1 = d1.Retrieve("account", (Guid)contaId.Id, new ColumnSet("tc4_cnpj", "name", "accountid"));
+
+
+            string cnpj = conta1.Contains("tc4_cnpj") ? conta1["tc4_cnpj"].ToString() : string.Empty;
+
+            if(cnpj != string.Empty)
+            {
+                QueryExpression queryConta2 = new QueryExpression("account");
+                queryConta2.ColumnSet.AddColumns("name", "accountid", "tc4_cnpj");
+                queryConta2.Criteria.AddCondition("tc4_cnpj", ConditionOperator.Equal, cnpj);
+
+                EntityCollection contas = d2.RetrieveMultiple(queryConta2);
+
+                if (contas != null)
+                {
+                    foreach (Entity account in contas.Entities)
+                    {
+                        Guid idContaDynamics2 = (Guid)account["accountid"];
+
+                        contaId.Id = idContaDynamics2;
+
+                    }
+                }
+
+            }
+            else
+            {
+                contaId = null;
+            }
+
+
+            return contaId;
         }
     }
 }

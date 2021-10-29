@@ -27,6 +27,7 @@ namespace TechnoConsole.Models
             queryAccount.ColumnSet.AddColumns
                 ("name",
                 "accountid",
+                "tc4_cnpj",
                 "telephone1",
                 "tc4_niveldecliente",
                 "tc4_porte",
@@ -55,6 +56,9 @@ namespace TechnoConsole.Models
 
                 string telephoneDaConta = conta.Contains("telephone1") ? (conta["telephone1"]).ToString() : string.Empty;
                 account["telephone1"] = telephoneDaConta;
+
+                string cnpj = conta.Contains("tc4_cnpj") ? (conta["tc4_cnpj"]).ToString() : string.Empty;
+                account["tc4_cnpj"] = cnpj;
 
                 OptionSetValue nivel = conta.Contains("tc4_niveldecliente") ? (OptionSetValue)conta["tc4_niveldecliente"] : null;
                 account["tc4_niveldecliente"] = nivel;
@@ -87,5 +91,6 @@ namespace TechnoConsole.Models
                 Service.Create(account);
             }
         }
+
     }
 }

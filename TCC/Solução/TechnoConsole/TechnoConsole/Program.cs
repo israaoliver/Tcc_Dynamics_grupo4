@@ -43,7 +43,7 @@ namespace TechnoConsole
 
             //Criando novos concorrentes no Dynamics 2
             Concorrentes createCompetitor = new Concorrentes(connectDynamics2);
-            createCompetitor.CreateDataTable(concorrentesCRM);
+            //createCompetitor.CreateDataTable(concorrentesCRM);
 
             //===========================Fatura================================//
             // Busca faturas no Dynamics 1 na tabela faturas
@@ -52,7 +52,7 @@ namespace TechnoConsole
 
             //Criando novas faturas no Dynamics 2
             Fatura createInvoice = new Fatura(connectDynamics2);
-            createInvoice.CreateDataTable(faturasCRM);
+            //createInvoice.CreateDataTable(faturasCRM);
 
 
             Console.WriteLine("Carga de Dados Finalizado!");

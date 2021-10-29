@@ -84,7 +84,7 @@ namespace TechnoConsole.Models
                 Decimal descontoFatura = fatura.Contains("discountpercentage") ? (Decimal)(fatura["discountpercentage"]) : 0;
                 invoice["discountpercentage"] = descontoFatura;
 
-                Money valorDescontonaFatura = fatura.Contains("discountamount") ? (Money)((AliasedValue)fatura["discountamount"]).Value : null;
+                Money valorDescontonaFatura = fatura.Contains("discountamount") ? (Money)fatura["discountamount"] : null;
                 invoice["discountamount"] = valorDescontonaFatura;
 
                 EntityReference opportunity = fatura.Contains("opportunityid") ? (EntityReference)fatura["opportunityid"] : null;

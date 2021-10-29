@@ -1,0 +1,12 @@
+F:\Prog\Tcc_Dynamics_grupo4\TCC\Solução\TechnoConsole\TechnoPlugins2\bin\Debug\TechnoPlugins2.dll.config
+F:\Prog\Tcc_Dynamics_grupo4\TCC\Solução\TechnoConsole\TechnoPlugins2\bin\Debug\TechnoPlugins2.dll
+F:\Prog\Tcc_Dynamics_grupo4\TCC\Solução\TechnoConsole\TechnoPlugins2\bin\Debug\TechnoPlugins2.pdb
+F:\Prog\Tcc_Dynamics_grupo4\TCC\Solução\TechnoConsole\TechnoPlugins2\bin\Debug\Microsoft.Xrm.Tooling.Connector.dll
+F:\Prog\Tcc_Dynamics_grupo4\TCC\Solução\TechnoConsole\TechnoPlugins2\bin\Debug\Newtonsoft.Json.dll
+F:\Prog\Tcc_Dynamics_grupo4\TCC\Solução\TechnoConsole\TechnoPlugins2\bin\Debug\Microsoft.Xrm.Tooling.Connector.xml
+F:\Prog\Tcc_Dynamics_grupo4\TCC\Solução\TechnoConsole\TechnoPlugins2\bin\Debug\Newtonsoft.Json.xml
+F:\Prog\Tcc_Dynamics_grupo4\TCC\Solução\TechnoConsole\TechnoPlugins2\obj\Debug\TechnoPlugins2.csproj.CoreCompileInputs.cache
+F:\Prog\Tcc_Dynamics_grupo4\TCC\Solução\TechnoConsole\TechnoPlugins2\obj\Debug\TechnoPlugins2.csproj.CopyComplete
+F:\Prog\Tcc_Dynamics_grupo4\TCC\Solução\TechnoConsole\TechnoPlugins2\obj\Debug\TechnoPlugins2.dll
+F:\Prog\Tcc_Dynamics_grupo4\TCC\Solução\TechnoConsole\TechnoPlugins2\obj\Debug\TechnoPlugins2.pdb
+F:\Prog\Tcc_Dynamics_grupo4\TCC\Solução\TechnoConsole\TechnoPlugins2\obj\Debug\TechnoPlugins2.csprojAssemblyReference.cache

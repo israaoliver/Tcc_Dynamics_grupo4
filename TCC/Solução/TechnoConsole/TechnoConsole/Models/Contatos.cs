@@ -78,14 +78,7 @@ namespace TechnoConsole.Models
                 string cargo = contato.Contains("jobtitle") ? (contato["jobtitle"]).ToString() : string.Empty;
                 newContatc["jobtitle"] = cargo;
 
-                EntityReference parentid = null;
-                EntityReference verificada = VerificandoConta(contato);
-                if(verificada != null)
-                {
-                    parentid = verificada;
-                }
-
-                newContatc["parentcustomerid"] = parentid;
+                newContatc["parentcustomerid"] = VerificandoConta(contato);
                
 
                 string email = contato.Contains("emailaddress1") ? (contato["emailaddress1"]).ToString() : string.Empty;

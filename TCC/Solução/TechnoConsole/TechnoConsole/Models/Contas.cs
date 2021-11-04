@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TechnoConsole.ConnectionsFactory;
 using TechnoConsole.Interfaces;
 
 namespace TechnoConsole.Models
@@ -52,7 +53,7 @@ namespace TechnoConsole.Models
 
                 account["name"] = conta["name"].ToString();
 
-                account["accountid"] = Guid.NewGuid();
+                account["accountid"] = SetandoIdConta(conta);
 
                 string telephoneDaConta = conta.Contains("telephone1") ? (conta["telephone1"]).ToString() : string.Empty;
                 account["telephone1"] = telephoneDaConta;
@@ -92,5 +93,29 @@ namespace TechnoConsole.Models
             }
         }
 
+        private Guid SetandoIdConta(Entity conta)
+        {    
+            IOrganizationService d2 = ConnectionDynamics2.GetCrmService();
+
+            Guid idAtual = (Guid)conta["accountid"];
+
+
+            QueryExpression queryAccount = new QueryExpression("account");
+            queryAccount.Criteria.AddCondition("accountid", ConditionOperator.Equal, idAtual);
+
+            EntityCollection contaEncontrada =  d2.RetrieveMultiple(queryAccount);
+
+            foreach(Entity buscando in contaEncontrada.Entities)
+            {
+                if (buscando != null)
+                {
+                    return Guid.NewGuid();
+                }
+   
+            }
+
+            return idAtual;
+
+        }
     }
 }

@@ -30,6 +30,7 @@ namespace TechnoConsole.Models
                 "name",
                 "transactioncurrencyid",
                 "ispricelocked",
+                "pricelevelid",
                 "datedelivered",
                 "duedate",
                 "shippingmethodcode",
@@ -37,8 +38,11 @@ namespace TechnoConsole.Models
                 "totallineitemamount",
                 "discountpercentage",
                 "discountamount",
+                "freightamount",
                 "opportunityid",
                 "salesorderid",
+                "description",
+                "billto_line1",
                 "customerid"
                 );
 
@@ -61,7 +65,6 @@ namespace TechnoConsole.Models
 
                 EntityReference moeda = fatura.Contains("transactioncurrencyid") ? (EntityReference)fatura["transactioncurrencyid"] : null;
                 invoice["transactioncurrencyid"] = moeda;
-
 
                 invoice["ispricelocked"] = fatura["ispricelocked"];
 
@@ -87,6 +90,10 @@ namespace TechnoConsole.Models
                 Money valorDescontonaFatura = fatura.Contains("discountamount") ? (Money)fatura["discountamount"] : null;
                 invoice["discountamount"] = valorDescontonaFatura;
 
+                Money valorFrete = fatura.Contains("freightamount") ? (Money)fatura["freightamount"] : null;
+                invoice["freightamount"] = valorFrete;
+
+
                 EntityReference opportunity = fatura.Contains("opportunityid") ? (EntityReference)fatura["opportunityid"] : null;
                 invoice["opportunityid"] = opportunity;
 
@@ -94,28 +101,15 @@ namespace TechnoConsole.Models
                 invoice["salesorderid"] = contrato;
 
                 EntityReference client = fatura.Contains("customerid") ? (EntityReference)fatura["customerid"] : null;
-                if (client != null)
-                {
-                    foreach (Entity contact in contatos.Entities)
-                    {
-                        string contactName = contact["fullname"].ToString();
-                        if (client.Name == contactName)
-                        {
-                            string idContato = contact["contactid"].ToString();
-                            Guid id = new Guid(idContato);
-                            client.Id = id;
-                            invoice["customerid"] = client;
-                            break;
-                        }
-                        else
-                        { invoice["customerid"] = null; }
+                invoice["customerid"] = client;
 
-                    }
-                }
-                else
-                {
-                    invoice["customerid"] = client;
-                }
+                string enderecoCobranca = fatura.Contains("billto_line1") ? (fatura["billto_line1"]).ToString() : string.Empty;
+                invoice["billto_line1"] = enderecoCobranca;
+
+                EntityReference listadePreco = fatura.Contains("pricelevelid") ? (EntityReference)fatura["pricelevelid"] : null;
+                invoice["pricelevelid"] = BuscarListaPreco(listadePreco);
+
+
 
 
 
@@ -124,5 +118,32 @@ namespace TechnoConsole.Models
             }
         }
 
+        private EntityReference BuscarListaPreco(EntityReference fatura)
+        {
+            IOrganizationService d2 = ConnectionDynamics2.GetCrmService();
+
+            QueryExpression queryListadePreco = new QueryExpression("pricelevel");
+            queryListadePreco.ColumnSet.AddColumn("name");
+            queryListadePreco.Criteria.AddCondition("name", ConditionOperator.Equal , fatura.Name);
+
+            EntityCollection faturaBuscada = d2.RetrieveMultiple(queryListadePreco);
+
+            if(faturaBuscada != null)
+            {
+                foreach (Entity lista in faturaBuscada.Entities)
+                {
+                    Guid idListadePreco = (Guid)lista["pricelevelid"];
+
+                    fatura.Id = idListadePreco;
+
+                }
+            }
+            else
+            {
+                fatura = null;
+            }
+
+            return fatura;
+        }
     }
 }
